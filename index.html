@@ -26,7 +26,7 @@
             flex-direction: column;
         }
 
-        /* Canvas de fond */
+        /* Background Canvas */
         #particle-canvas {
             position: fixed;
             top: 0;
@@ -46,18 +46,18 @@
         }
 
         .maintenance-card {
-            background: rgba(10, 10, 10, 0.85);
+            background: rgba(10, 10, 10, 0.7);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 242, 255, 0.2);
             padding: 40px;
-            width: 100%;
             max-width: 800px;
+            width: 100%;
             position: relative;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             box-sizing: border-box;
+            overflow: hidden; /* Empêche le contenu de sortir de la carte */
         }
 
-        /* Coins décoratifs */
         .maintenance-card::before, .maintenance-card::after {
             content: '';
             position: absolute;
@@ -68,7 +68,7 @@
         .maintenance-card::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
 
         pre {
-            font-size: 1.1vw;
+            font-size: 6px;
             line-height: 1.1;
             color: var(--particle-color);
             opacity: 0.9;
@@ -121,7 +121,7 @@
             word-break: break-word;
         }
 
-        /* Section Profil */
+        /* --- SECTION PROFIL --- */
         .user-profile {
             display: flex;
             align-items: center;
@@ -188,25 +188,27 @@
             text-decoration: underline;
         }
 
+        /* --- NAVIGATION --- */
         .nav-links {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
+            justify-content: center; /* Centre les boutons par défaut */
         }
 
         .btn {
             text-decoration: none;
             color: var(--glow-color);
             border: 1px solid var(--glow-color);
-            padding: 12 15px;
+            padding: 10px 20px;
             font-size: 0.75rem;
             transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 2px;
             background: rgba(0, 242, 255, 0.05);
-            flex: 1;
-            min-width: 150px;
             text-align: center;
+            min-width: 160px;
+            box-sizing: border-box;
         }
 
         .btn:hover {
@@ -226,54 +228,36 @@
             backdrop-filter: blur(5px);
         }
 
-        /* --- OPTIMISATION MOBILE --- */
+        /* --- RESPONSIVE --- */
+        @media (min-width: 600px) { pre { font-size: 8px; } }
+
         @media (max-width: 600px) {
             .maintenance-card {
-                padding: 25px 15px;
+                padding: 25px 20px;
                 margin: 10px;
-                width: calc(100% - 20px);
             }
 
-            pre {
-                font-size: 4px; /* Empêche le débordement de l'ASCII */
-                margin-bottom: 20px;
-            }
-
-            h1 {
-                font-size: 1rem;
-                letter-spacing: 2px;
-                text-align: left;
-            }
-
-            .status-line {
-                gap: 10px;
-            }
-
-            .terminal-text {
-                font-size: 0.8rem;
-                padding-left: 12px;
-            }
+            pre { font-size: 4px; } /* ASCII art s'adapte au mobile */
 
             .user-profile {
                 flex-direction: column;
                 text-align: center;
-                gap: 12px;
-                padding: 20px 10px;
             }
 
             .profile-header {
                 flex-direction: column;
                 align-items: center;
-                gap: 2px;
             }
 
             .nav-links {
                 flex-direction: column;
+                align-items: center; /* Centre les boutons raccourcis */
             }
 
             .btn {
-                width: 100%;
-                padding: 10px 10px; /* Plus facile à cliquer sur mobile */
+                width: 180px; /* Longueur réduite demandée */
+                max-width: 100%;
+                padding: 12px 10px;
             }
         }
     </style>
@@ -329,14 +313,14 @@
         </div>
 
         <div class="user-profile">
-            <img src="https://github.com/Sandro642.png" alt="Sandro Soria" class="profile-avatar">
+            <img src="https://github.com/Sandro642.png" alt="Profile Avatar" class="profile-avatar">
             
             <div class="profile-info">
                 <div class="profile-header">
                     <span class="profile-name">SANDRO SORIA</span>
                     <span class="profile-alias">(Sandraw)</span>
                 </div>
-                <div class="profile-role">Main Developer</div>
+                <div class="profile-role">Main Developer (Maintener)</div>
                 <div class="profile-links">
                     <a href="mailto:sandro33810@gmail.com">Email</a> • 
                     <a href="https://github.com/Sandro642" target="_blank">GitHub Profile</a>
@@ -370,8 +354,8 @@
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
             this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = (Math.random() - 0.5) * 0.4;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
             this.color = Math.random() > 0.5 ? '#00f2ff' : '#4af626';
             this.opacity = Math.random();
         }
@@ -396,9 +380,7 @@
     }
 
     function createParticles() {
-        particles = [];
-        // Moins de particules sur mobile pour économiser la batterie
-        const count = Math.min((window.innerWidth * window.innerHeight) / 9000, 150);
+        const count = (canvas.width * canvas.height) / 8000;
         for (let i = 0; i < count; i++) {
             particles.push(new Particle());
         }
@@ -415,6 +397,7 @@
 
     window.addEventListener('resize', () => {
         initCanvas();
+        particles = [];
         createParticles();
     });
 
