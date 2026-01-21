@@ -17,16 +17,16 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            min-height: 100vh;
             background-color: var(--bg-dark);
             color: white;
             font-family: 'Space Mono', monospace;
-            overflow: hidden;
+            /* Permet le scroll vertical si le contenu dépasse (mobile) */
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Background Canvas */
         #particle-canvas {
             position: fixed;
             top: 0;
@@ -42,16 +42,19 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .maintenance-card {
-            background: rgba(10, 10, 10, 0.7);
+            background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 242, 255, 0.2);
             padding: 40px;
+            width: 100%;
             max-width: 800px;
             position: relative;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
         }
 
         .maintenance-card::before, .maintenance-card::after {
@@ -64,13 +67,14 @@
         .maintenance-card::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
 
         pre {
-            font-size: 6px;
+            font-size: 1.1vw; /* Taille adaptative */
             line-height: 1.1;
             color: var(--particle-color);
             opacity: 0.9;
             margin-bottom: 30px;
             filter: drop-shadow(0 0 5px var(--particle-color));
             overflow: hidden;
+            text-align: center;
         }
 
         h1 {
@@ -87,6 +91,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
         .badge {
@@ -114,7 +119,6 @@
             line-height: 1.6;
         }
 
-        /* --- NOUVELLE SECTION PROFIL --- */
         .user-profile {
             display: flex;
             align-items: center;
@@ -180,7 +184,6 @@
             color: var(--glow-color);
             text-decoration: underline;
         }
-        /* ------------------------------ */
 
         .nav-links {
             display: flex;
@@ -198,6 +201,9 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             background: rgba(0, 242, 255, 0.05);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
         }
 
         .btn:hover {
@@ -217,7 +223,42 @@
             backdrop-filter: blur(5px);
         }
 
-        @media (min-width: 600px) { pre { font-size: 8px; } }
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 600px) {
+            .maintenance-card {
+                padding: 25px 15px;
+                margin: 10px;
+            }
+
+            pre {
+                font-size: 5px; /* Taille fixe minimum pour lisibilité ASCII */
+            }
+
+            h1 {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -278,7 +319,7 @@
                     <span class="profile-name">SANDRO SORIA</span>
                     <span class="profile-alias">(Sandraw)</span>
                 </div>
-                <div class="profile-role">Main Developer (Maintener)</div>
+                <div class="profile-role">Main Developer</div>
                 <div class="profile-links">
                     <a href="mailto:sandro33810@gmail.com">Email</a> • 
                     <a href="https://github.com/Sandro642" target="_blank">GitHub Profile</a>
@@ -312,8 +353,8 @@
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
             this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.4;
+            this.speedY = (Math.random() - 0.5) * 0.4;
             this.color = Math.random() > 0.5 ? '#00f2ff' : '#4af626';
             this.opacity = Math.random();
         }
@@ -338,7 +379,8 @@
     }
 
     function createParticles() {
-        const count = (canvas.width * canvas.height) / 8000;
+        particles = [];
+        const count = Math.min((window.innerWidth * window.innerHeight) / 9000, 150);
         for (let i = 0; i < count; i++) {
             particles.push(new Particle());
         }
@@ -355,7 +397,6 @@
 
     window.addEventListener('resize', () => {
         initCanvas();
-        particles = [];
         createParticles();
     });
 
