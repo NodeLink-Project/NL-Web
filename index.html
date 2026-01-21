@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>NodeLink Project | System Maintenance</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700&display=swap');
@@ -21,12 +21,12 @@
             background-color: var(--bg-dark);
             color: white;
             font-family: 'Space Mono', monospace;
-            /* Permet le scroll vertical si le contenu dépasse (mobile) */
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
 
+        /* Canvas de fond */
         #particle-canvas {
             position: fixed;
             top: 0;
@@ -57,6 +57,7 @@
             box-sizing: border-box;
         }
 
+        /* Coins décoratifs */
         .maintenance-card::before, .maintenance-card::after {
             content: '';
             position: absolute;
@@ -67,7 +68,7 @@
         .maintenance-card::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
 
         pre {
-            font-size: 1.1vw; /* Taille adaptative */
+            font-size: 1.1vw;
             line-height: 1.1;
             color: var(--particle-color);
             opacity: 0.9;
@@ -117,8 +118,10 @@
             font-size: 0.85rem;
             margin-bottom: 25px;
             line-height: 1.6;
+            word-break: break-word;
         }
 
+        /* Section Profil */
         .user-profile {
             display: flex;
             align-items: center;
@@ -195,7 +198,7 @@
             text-decoration: none;
             color: var(--glow-color);
             border: 1px solid var(--glow-color);
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 0.75rem;
             transition: all 0.3s;
             text-transform: uppercase;
@@ -223,32 +226,45 @@
             backdrop-filter: blur(5px);
         }
 
-        /* --- RESPONSIVE ADJUSTMENTS --- */
+        /* --- OPTIMISATION MOBILE --- */
         @media (max-width: 600px) {
             .maintenance-card {
                 padding: 25px 15px;
                 margin: 10px;
+                width: calc(100% - 20px);
             }
 
             pre {
-                font-size: 5px; /* Taille fixe minimum pour lisibilité ASCII */
+                font-size: 4px; /* Empêche le débordement de l'ASCII */
+                margin-bottom: 20px;
             }
 
             h1 {
                 font-size: 1rem;
                 letter-spacing: 2px;
+                text-align: left;
+            }
+
+            .status-line {
+                gap: 10px;
+            }
+
+            .terminal-text {
+                font-size: 0.8rem;
+                padding-left: 12px;
             }
 
             .user-profile {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
+                gap: 12px;
+                padding: 20px 10px;
             }
 
             .profile-header {
                 flex-direction: column;
                 align-items: center;
-                gap: 0;
+                gap: 2px;
             }
 
             .nav-links {
@@ -257,6 +273,7 @@
 
             .btn {
                 width: 100%;
+                padding: 15px 10px; /* Plus facile à cliquer sur mobile */
             }
         }
     </style>
@@ -312,7 +329,7 @@
         </div>
 
         <div class="user-profile">
-            <img src="https://github.com/Sandro642.png" alt="Profile Avatar" class="profile-avatar">
+            <img src="https://github.com/Sandro642.png" alt="Sandro Soria" class="profile-avatar">
             
             <div class="profile-info">
                 <div class="profile-header">
@@ -380,6 +397,7 @@
 
     function createParticles() {
         particles = [];
+        // Moins de particules sur mobile pour économiser la batterie
         const count = Math.min((window.innerWidth * window.innerHeight) / 9000, 150);
         for (let i = 0; i < count; i++) {
             particles.push(new Particle());
